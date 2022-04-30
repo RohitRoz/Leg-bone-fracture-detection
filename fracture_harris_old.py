@@ -72,9 +72,7 @@ def Canny_detector(img, weak_th = None, strong_th = None):
             if width>neighb_2_x>= 0 and height>neighb_2_y>= 0:
                 if mag[i_y, i_x]<mag[neighb_2_y, neighb_2_x]:
                     mag[i_y, i_x]= 0
-   
-    #weak_ids = np.zeros_like(img)
-    #strong_ids = np.zeros_like(img)              
+                 
     ids = np.zeros_like(img)
        
     # hysterisis thresholding step
@@ -98,7 +96,7 @@ def Canny_detector(img, weak_th = None, strong_th = None):
 # opening file explorer
 file = easygui.fileopenbox()
 
-# loading image  
+# loading image
 frame = cv2.imread(file)
 
 # calling canny edge detection function
@@ -110,29 +108,17 @@ canny_img = np.float32(canny_img)
 
 # finding harris corners by finding gradient covariance matrix over the neighbourhood of blocksize x blocksize and computing characteristic
 harris_img = cv2.cornerHarris(canny_img,2,7,0.07)
+
+# dilating image to mark corners more accurately and superimposing corners on canny edge detected image
 harris_img = cv2.dilate(harris_img, None)
-
-ret, harris_img = cv2.threshold(harris_img,0.01*harris_img.max(),255,0)
-harris_img = np.uint8(harris_img)
-
-# finding centroids
-ret, labels, stats, centroids = cv2.connectedComponentsWithStats(harris_img)
-
-# criteria defined to stop and refine corners
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001)
-corners = cv2.cornerSubPix(canny_img,np.float32(centroids),(5,5),(-1,-1),criteria)
-
-# drawing corners on canny edge detected image
-res = np.hstack((centroids,corners))
-res = np.int0(res)
 can2img = cv2.imread('canny1.jpg')
-can2img[res[:,1],res[:,0]]=[0,0,255]
-can2img[res[:,3],res[:,2]] = [0,255,0]
+can2img[harris_img>0.01*harris_img.max()]=[0,0,255]
 
 # displaying image
-cv2.imwrite('harrissubpix1.jpg',can2img)
+cv2.imwrite('harris1.jpg',can2img)
 
-finalharrissubpix = cv2.imread('harrissubpix1.jpg')
+finalharris = cv2.imread('harris1.jpg')
+ 
 f, plots = plt.subplots() 
-plots.imshow(finalharrissubpix)
+plots.imshow(finalharris)
 plt.show()

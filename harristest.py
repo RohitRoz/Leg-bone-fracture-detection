@@ -7,11 +7,11 @@ import easygui
 def Canny_detector(img, weak_th = None, strong_th = None):
       
     # conversion of image to grayscale
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
       
     # noise reduction
-    img = cv2.bilateralFilter(img,9,75,75)
+    #img = cv2.bilateralFilter(img,9,75,75)
        
     # gradient calculation
     gx = cv2.Sobel(np.float32(img), cv2.CV_64F, 1, 0, 3)
@@ -101,6 +101,12 @@ file = easygui.fileopenbox()
 # loading image
 frame = cv2.imread(file)
 
+# conversion of image to grayscale
+frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+# noise reduction
+frame = cv2.bilateralFilter(frame,9,75,75)
+
 # calling canny edge detection function
 canny_img = Canny_detector(frame)
 
@@ -121,11 +127,12 @@ cv2.imwrite('harris1.jpg',can2img)
 
 finalharris = cv2.imread('harris1.jpg')
  
-f, plots = plt.subplots() 
-plots.imshow(finalharris)
-plt.show()
-
-#f, plots = plt.subplots(2, 1) 
-#plots[0].imshow(canny_img)
-#plots[1].imshow(finalharris)
+#f, plots = plt.subplots() 
+#plots.imshow(finalharris)
 #plt.show()
+
+f, plots = plt.subplots(1, 3) 
+plots[0].imshow(frame)
+plots[1].imshow(canny_img)
+plots[2].imshow(finalharris)
+plt.show()
