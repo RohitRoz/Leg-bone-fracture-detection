@@ -170,10 +170,10 @@ frame = cv2.bilateralFilter(frame,9,75,75)
 canny_img = CannyDetector(frame)
 
 # saving canny edge detected image and converting image to float32 datatype
-cv2.imwrite('canny1.jpg',canny_img)
+cv2.imwrite('canny.jpg',canny_img)
 
 # getting canny image
-firstimage = cv2.imread('canny1.jpg', cv2.IMREAD_GRAYSCALE)
+firstimage = cv2.imread('canny.jpg', cv2.IMREAD_GRAYSCALE)
 w, h = firstimage.shape
 
 # convert image to color to draw colored circles on it
